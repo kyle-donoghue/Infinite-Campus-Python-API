@@ -1,1 +1,2 @@
 # Infinite Campus API written in Python3
+This project was made because of my want for a fast and easy API for Infinite Campus. This project is based off of @j-koreth 's Infinite-Campus-API-2 (https://github.com/j-koreth/Infinite-Campus-API-2)
