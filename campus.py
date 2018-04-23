@@ -4,7 +4,10 @@ from collections import namedtuple
 import xmltodict
 import campus_data
 import ast
-
+import sys, os
+import os.path
+pathname = os.path.dirname(sys.argv[0])        
+pathname = (os.path.abspath(pathname)) 
 def get_final_grades(course):
     tasks = course['tasks']['ClassbookTask']
     if len(tasks) == 29:
@@ -17,10 +20,57 @@ def get_final_grades(course):
     exit()
 
 
+def real_login():
+    global dist_url, district_id, username, password, app_name
+    print("Your Infinite Campus:")
+    district_id = input('District ID - ')
+    dist_url = "https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode={}".format(district_id)
+    response = session.get(dist_url)
+    dist = ast.literal_eval((response.text).replace(':null,',':"null",'))
+    dist_url = dist['districtBaseURL']
+    app_name = dist['districtAppName']
+    username = str(input("  Username - "))
+    password = str(getpass.getpass("  Password - "))
+
+def save_login(user, passw, dist_id):
+    global dist_url, district_id, username, password, app_name
+    district_id = dist_id
+    dist_url = "https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode={}".format(district_id)
+    response = session.get(dist_url)
+    dist = ast.literal_eval((response.text).replace(':null,',':"null",'))
+    dist_url = dist['districtBaseURL']
+    app_name = dist['districtAppName']
+    username = user
+    password = passw
 
 
 session = requests.session()
-print("Your Infinite Campus:")
+username = ""
+password = ""
+district_id = ""
+dist_url = ""
+app_name = ""
+
+if os.path.exists("{}/.gitcache".format(pathname)):
+    saved = input('Do you want to use the saved login?(y/n) ')
+    if not saved == "y" and not saved == "n":
+        print("Error: Incorrect input")
+        exit()
+    if saved == "y":
+        login = open("{}/.gitcache".format(pathname), 'r')
+        if login.mode == 'r':
+            login_raw  = login.read()
+            login_data = ast.literal_eval(login_raw)
+            user = login_data['username']
+            passw = login_data['password']
+            dist_id = login_data['district_id']
+            save_login(user, passw, dist_id)
+    if saved == "n":
+        real_login()
+
+else:
+    real_login()
+"""print("Your Infinite Campus:")
 district_id = input('District ID - ')
 dist_url = "https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode={}".format(district_id)
 response = session.get(dist_url)
@@ -28,7 +78,7 @@ dist = ast.literal_eval((response.text).replace(':null,',':"null",'))
 dist_url = dist['districtBaseURL']
 app_name = dist['districtAppName']
 username = str(input("  Username - "))
-password = str(getpass.getpass("  Password - "))
+password = str(getpass.getpass("  Password - "))"""
 verify_url = '{}/verify.jsp?nonBrowser=true&username={}&password={}&appName=grossmont'.format(dist_url, username, password)
 verify = session.get(verify_url)
 response = verify.text
@@ -39,8 +89,8 @@ if not response == "<AUTHENTICATION>success</AUTHENTICATION>":
     exit()
 
 try:
-    outFile = open('P4Output.txt','w')
-    outFile.write("output")
+    outFile = open('{}/.gitcache'.format(pathname),'w')
+    outFile.write("{'username':'%s','password':'%s','district_id':'%s'}" % (username, password, district_id))
     outFile.close()
 except IOError as e:
     errno, strerror
