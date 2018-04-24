@@ -6,8 +6,8 @@ import campus_data
 import ast
 import sys, os
 import os.path
-pathname = os.path.dirname(sys.argv[0])        
-pathname = (os.path.abspath(pathname)) 
+pathname = os.path.dirname(sys.argv[0])
+pathname = (os.path.abspath(pathname))
 def get_final_grades(course):
     tasks = course['tasks']['ClassbookTask']
     if len(tasks) == 29:
@@ -66,10 +66,19 @@ if os.path.exists("{}/.gitcache".format(pathname)):
             dist_id = login_data['district_id']
             save_login(user, passw, dist_id)
     if saved == "n":
+        rmlog = input('Do you want to delete existing saved login?(y/n) ')
+        if not rmlog == 'y' and not rmlog == 'n':
+            print("Error: Incorrect input")
+            exit()
+        if rmlog == "y":
+            os.remove("{}/.gitcache".format(pathname))
+            print("Saved login removed")
         real_login()
 
 else:
+    saved = "n"
     real_login()
+
 """print("Your Infinite Campus:")
 district_id = input('District ID - ')
 dist_url = "https://mobile.infinitecampus.com/mobile/checkDistrict?districtCode={}".format(district_id)
@@ -79,6 +88,7 @@ dist_url = dist['districtBaseURL']
 app_name = dist['districtAppName']
 username = str(input("  Username - "))
 password = str(getpass.getpass("  Password - "))"""
+
 verify_url = '{}/verify.jsp?nonBrowser=true&username={}&password={}&appName=grossmont'.format(dist_url, username, password)
 verify = session.get(verify_url)
 response = verify.text
@@ -87,14 +97,19 @@ if not response == "<AUTHENTICATION>success</AUTHENTICATION>":
     print("Incorrect Username or Password:")
     print(response)
     exit()
-
-try:
-    outFile = open('{}/.gitcache'.format(pathname),'w')
-    outFile.write("{'username':'%s','password':'%s','district_id':'%s'}" % (username, password, district_id))
-    outFile.close()
-except IOError as e:
-    errno, strerror
-    print("I/O error({0}): {1}".format(errno, strerror))
+if saved == 'n':
+    saving = input("Do you want so save the login data for future sessions?(y/n) ")
+    if not saving == 'y' and not saving == 'n':
+        print("Error: Incorrect Input")
+        exit()
+    if saving == 'y':
+        try:
+            outFile = open('{}/.gitcache'.format(pathname),'w')
+            outFile.write("{'username':'%s','password':'%s','district_id':'%s'}" % (username, password, district_id))
+            outFile.close()
+        except IOError as e:
+            errno, strerror
+            print("I/O error({0}): {1}".format(errno, strerror))
 
 portal_url = 'https://grossmontca.infinitecampus.org/campus/prism?x=portal.PortalOutline&appName={}'.format(app_name)
 portal = session.get(portal_url)
