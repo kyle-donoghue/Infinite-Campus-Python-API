@@ -10,4 +10,5 @@ my code for easier understanding.
 `campus.py` returns all your current grades in the console.
 
 `rawGrades.py` is a command-lin interface for accessing your grades; right now, all it does is make sure everything connects properly.
+
 ```(rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file>)```
