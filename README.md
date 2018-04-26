@@ -12,3 +12,6 @@ my code for easier understanding.
 `rawGrades.py` is a command-lin interface for accessing your grades; right now, all it does is make sure everything connects properly.
 
 ```(rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file>)```
+
+## Dependencies
+The Infinite Campus Python API uses a couple dependencies which can all be obtained through pip. These include: `ast`, `xmltodict`, `requests`, `collections`, & `getpass`.
