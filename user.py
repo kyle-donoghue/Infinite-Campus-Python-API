@@ -67,3 +67,25 @@ class user:
             self.calendar_id = schedule_structure['@calendarID']
             self.connected_person = True
         return self.connected_person, error
+    
+    def raw_grades(self):
+        error = ""
+        grades = ""
+        try:
+            self.connected_grades
+        except NameError:
+            error = "No grades found... Please run the connect_grade() command"
+        else:
+            grades = self.grades
+        return grades, error
+    
+    def connect_all(self):
+        success = []
+        errors = []
+        session = self.connect_session()
+        portal = self.connect_portal()
+        grades = self.connect_grades()
+        success.extend((session[0], portal[0], grades[0]))
+        errors.extend((session[1], portal[1], grades[1]))
+        return success, errors
+        

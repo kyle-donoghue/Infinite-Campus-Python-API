@@ -7,9 +7,11 @@ worry. Currently, you can see all your grades and save a login for future refere
 my code for easier understanding.
 
 ## Usage
-`campus.py` returns all your current grades in the console.
+All scripts can be run by normal `python script.py` or by `chmod +x script.py` then `./script.py`.
 
-`rawGrades.py` is a command-lin interface for accessing your grades; right now, all it does is make sure everything connects properly.
+`campus.py` returns all your current grades in the console based on semester choice. It also has a saved login feature that can be used with rawGrades.py.
+
+`rawGrades.py` is a command-line interface for accessing your grades; right now, all it does is make sure everything connects properly.
 
 ```(rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file>)```
 
