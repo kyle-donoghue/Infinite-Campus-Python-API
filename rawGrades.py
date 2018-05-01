@@ -5,19 +5,20 @@ from user import user
 
 inputfile = ''
 outputfile = ''
+xml = False
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"hcu:p:i:",["username=","password=","district-id="])
+    opts, args = getopt.getopt(sys.argv[1:],"hsxu:p:i:",["username=","password=","district-id="])
 except getopt.GetoptError:
-    print('rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file>')
+    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)')
     exit()
 if len(opts) == 0:
-    print('rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file>')
+    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)')
     exit()
 for opt, arg in opts:
     if opt == '-h':
         print('rawGrades.py -u <username> -p <password> -i <district-id>')
         sys.exit()
-    elif opt == '-c':
+    elif opt == '-s':
         pathname = os.path.dirname(sys.argv[0])
         pathname = (os.path.abspath(pathname))
         if os.path.isfile("{}/.gitcache".format(pathname)):
@@ -31,6 +32,8 @@ for opt, arg in opts:
         else:
             print("No saved login found... Please create one with campus.py")
             exit()
+    elif opt == '-x':
+        xml = True
     elif opt in ("-u", "--username"):
         username = str(arg)
     elif opt in ("-p", "--password"):
@@ -55,8 +58,11 @@ for i in connect_all[0]:
 if connected == False:
     print(connect_all[1])
     exit()
-    
-grades = student.raw_grades()
+
+if xml:
+    grades = student.raw_xml_grades()
+if not xml:
+    grades = student.raw_grades()
 
 if grades[1] == '':
     print(grades[0])

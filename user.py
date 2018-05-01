@@ -43,6 +43,7 @@ class user:
             self.grades_url = '{}/prism?&x=portal.PortalClassbook-getClassbookForAllSections&mode=classbook&personID={}&structureID={}&calendarID={}'.format(self.dist_url, self.person_id, self.structure_id, self.calendar_id)
             response = self.session.get(self.grades_url)
             self.grades = xmltodict.parse(response.text)
+            self.xml_grades = str(response.text)
             self.connected_grades = True
         return self.connected_grades, error
     
@@ -77,6 +78,18 @@ class user:
             error = "No grades found... Please run the connect_grade() command"
         else:
             grades = self.grades
+        return grades, error
+        
+        
+    def raw_xml_grades(self):
+        error = ""
+        grades = ""
+        try:
+            self.connected_grades
+        except NameError:
+            error = "No grades found... Please run the connect_grade() command"
+        else:
+            grades = self.xml_grades
         return grades, error
     
     def connect_all(self):
