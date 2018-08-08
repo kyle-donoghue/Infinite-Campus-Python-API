@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys, getopt, os, ast
 from user import user
@@ -6,13 +6,14 @@ from user import user
 inputfile = ''
 outputfile = ''
 xml = False
+form = False
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"hsxu:p:i:",["username=","password=","district-id="])
+    opts, args = getopt.getopt(sys.argv[1:],"hsxgu:p:i:",["username=","password=","district-id="])
 except getopt.GetoptError:
-    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)')
+    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)> -g <optional: prints out formatted grades>')
     exit()
 if len(opts) == 0:
-    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)')
+    print('rawGrades.py -u <username> -p <password> -i <district-id> -s <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)> -g <optional: prints out formatted grades>')
     exit()
 for opt, arg in opts:
     if opt == '-h':
@@ -34,6 +35,8 @@ for opt, arg in opts:
             exit()
     elif opt == '-x':
         xml = True
+    elif opt == '-g':
+        form = True
     elif opt in ("-u", "--username"):
         username = str(arg)
     elif opt in ("-p", "--password"):
@@ -45,10 +48,6 @@ student = user(username, password, dist_id)
 portal = student.connect_portal()
 grades = student.connect_grades()"""
 connect_all = student.connect_all()
-# if session[0] and portal[0] and grades[0]:
-#     print("Everything connected successfully")
-# else:
-#     print("ERRORS:\nsession: {}\nportal: {}\ngrades: {}".format(session, portal, grades))
 connected = True
 for i in connect_all[0]:
     if connected == False:
@@ -59,10 +58,14 @@ if connected == False:
     print(connect_all[1])
     exit()
 
-if xml:
-    grades = student.raw_xml_grades()
-if not xml:
-    grades = student.raw_grades()
+if form:
+    grades = student.get_classes()
+
+else:
+    if xml:
+        grades = student.raw_xml_grades()
+    if not xml:
+        grades = student.raw_grades()
 
 if grades[1] == '':
     print(grades[0])
