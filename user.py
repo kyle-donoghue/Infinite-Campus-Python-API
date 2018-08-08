@@ -151,7 +151,6 @@ class user:
             if sem == '1' and course['@termName'] == 'S1':
                 total[course['@courseName']] = [final_grades['@letterGrade'],final_grades['@formattedPercentage']]
             if sem == '2' and course['@termName'] == 'S2':
-                print(sem)
                 total[course['@courseName']] = [final_grades['@letterGrade'],final_grades['@formattedPercentage']]
             if sem == '3':
                 total[course['@courseName']] = [final_grades['@letterGrade'],final_grades['@formattedPercentage']]
