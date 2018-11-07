@@ -15,4 +15,4 @@ All scripts can be run by normal `python script.py` or by `chmod +x script.py` t
 ```(rawGrades.py -u <username> -p <password> -i <district-id> -c <optional: uses existing save file> -x <optional: spits out xml instead of default dictionary)```
 
 ## Dependencies
-The Infinite Campus Python API uses a couple dependencies which can all be obtained through pip. These include: `ast`, `xmltodict`, `requests`, `collections`, & `getpass`.
+The Infinite Campus Python API uses a few dependencies which can all be obtained through pip. These include: `ast`, `xmltodict`, `requests`, `collections`, & `getpass`.
